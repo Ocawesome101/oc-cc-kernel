@@ -1,6 +1,7 @@
 -- Init system --
 
-local log, setTextColor, getTextColor = ...
+local log = ...
+local lib = "/lib/"
 
 local function printStylized(...)
   local args = {...}
@@ -23,3 +24,16 @@ sleep(0.2)
 
 log("Reading configuration from /etc/init.conf")
 local ok, err = loadfile("/etc/init.conf")
+
+if not ok then
+  error("Could not load /etc/init.conf")
+end
+
+local apis = ok()
+
+for i=1, #apis, 1 do
+  log("Loading " .. apis[i])
+  local ok, err = loadfile(lib .. apis[i])
+  if not ok then log("WARNING: Could not load " .. apis[i] .. " from " .. lib .. apis[i])
+  else setfenv(ok, _G); ok() end
+end
