@@ -107,11 +107,7 @@ for i=1, #files, 1 do
     if fs.isDir(lsPath .. "/" .. files[i]) then
       setTextColor(dirColor)
     end
-    if not showSize then
-      write(files[i] .. "  ")
-    else
-      print(files[i])
-    end
+    print(files[i])
   end
 end
 
