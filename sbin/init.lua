@@ -1,7 +1,12 @@
--- Init system --
+-- Init script --
 
 local log = ...
 local lib = "/lib/"
+
+if require then
+  print("You cannot run init as it is already running.")
+  return nil
+end
 
 local function printStylized(...)
   local args = {...}
@@ -20,7 +25,6 @@ print("")
 printStylized(colors.white, "Welcome to ", colors.lightBlue, "oc-cc-kernel", colors.white, "!")
 
 print("")
-sleep(0.2)
 
 log("Reading configuration from /etc/init.conf")
 local ok, err = loadfile("/etc/init.conf")
@@ -28,6 +32,11 @@ local ok, err = loadfile("/etc/init.conf")
 if not ok then
   error("Could not load /etc/init.conf")
 end
+
+log("Setting hostname")
+local h = fs.open("/etc/hostname", "r")
+sys.setHostname(h.readLine())
+h.close()
 
 local apis = ok()
 
@@ -37,3 +46,6 @@ for i=1, #apis, 1 do
   if not ok then log("WARNING: Could not load " .. apis[i] .. " from " .. lib .. apis[i])
   else setfenv(ok, _G); ok() end
 end
+
+log("Starting login screen")
+kernel.run("/bin/login.lua")

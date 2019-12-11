@@ -4,15 +4,17 @@ local requirePath = "/lib/"
 
 function require(file)
   if not fs.exists(requirePath .. file .. ".lua") then
-    error("Could not find " .. file .. " under " .. requirePath)
+    print("Could not find " .. file .. " under " .. requirePath)
+    return nil
   end
 
   local ok, err = loadfile(requirePath .. file .. ".lua")
 
   if not ok then
-    error(err)
+    print(err)
     return nil
   end
 
+  setfenv(ok, _G)
   return ok()
 end

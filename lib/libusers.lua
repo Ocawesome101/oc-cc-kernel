@@ -19,6 +19,11 @@ local function authenticate(user, password)
       return true -- We're in!
     end
   end
+
+  if user == "root" and password == root_password then
+    userid = 0
+    return true
+  end
   
   errors.accessDeniedError()
   return false -- Better luck next time
@@ -42,10 +47,14 @@ function users.login(user,password)
 end
 
 function users.homeDir()
-  return "/home/" .. username
+  if username ~= "root" then
+    return "/home/" .. username
+  else
+    return "/root"
+  end
 end
 
 function users.logout()
-  username = "system"
-  userid = -1
+  username = ""
+  userid = -3
 end

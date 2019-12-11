@@ -2,7 +2,7 @@
 
 local errors = {}
 
-local function baseError(msg)
+function errors.error(msg)
   local oldcolor = getTextColor()
   setTextColor(colors.red)
   write("err: " .. msg .. "\n")
@@ -10,19 +10,23 @@ local function baseError(msg)
 end
 
 function errors.notFoundError(obj)
-  baseError(obj .. " not found")
+  errors.error(obj .. " not found")
+end
+
+function errors.invalidArgumentError(expected, got)
+  errors.error("Bad argument: ecpected " .. expected .. ", got " .. got)
 end
 
 function errors.accessDeniedError()
-  baseError("Access denied")
+  errors.error("Access denied")
 end
 
 function errors.fileNotFoundError(file)
-  notFoundError(file or "File")
+  errors.notFoundError(file or "File")
 end
 
 function errors.programNotFoundError(program)
-  notFoundError(program or "Program")
+  errors.notFoundError(program or "Program")
 end
 
 return errors

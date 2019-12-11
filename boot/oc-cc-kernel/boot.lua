@@ -78,6 +78,8 @@ local osenv = {}
 log("add os API")
 osenv.os = tcopy(os)
 
+osenv.read = read
+
 log("tweak")
 osenv.os.version = function()
   return nil
@@ -91,12 +93,14 @@ osenv.load = load
 osenv.loadstring = loadstring
 osenv.loadfile = loadfile
 
-log("setfenv, getfenv")
+log("setfenv, getfenv, pairs")
 osenv.setfenv = setfenv
 osenv.getfenv = function(arg)
   local tge = getfenv(arg)
   return tge
 end
+
+osenv.pairs = pairs
 
 log("pcall, xpcall")
 osenv.pcall = pcall
@@ -163,6 +167,8 @@ end
 
 log("add colors API")
 osenv.colors = tcopy(colors)
+
+osenv.error = error
 
 log("finalize osenv")
 osenv._G = osenv

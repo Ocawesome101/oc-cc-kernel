@@ -76,9 +76,14 @@ end
 
 log("Welcome to " .. kernelUname)
 log("Seting up sysinfo API")
+local hostname = "localhost"
 sysinfo = {}
 sysinfo.cpuArch = function()return kernelArch end
 sysinfo.hwid = function()return hwid end
+
+sys = {}
+sys.hostname = function()return hostname end
+sys.setHostname = function(hn)hostname = hn end
 
 log("Getting BogoMIPS...")
 local st = os.epoch("utc")
@@ -100,12 +105,35 @@ local reboot = os.reboot
 os.shutdown = nil
 os.reboot = nil
 
+local open = fs.open -- Avoid the permissions that are setup later
+
+local function uninit()
+  log("Saving hostname")
+  local h = open("/etc/hostname", "w")
+  h.write(sys.hostname())
+  h.close()
+  log("Logging out")
+  users.logout()
+end
+
 kernel = {}
 
 function kernel.uname_all()     return kernelUname     end
 function kernel.uname_arch()    return kernelArch      end
 function kernel.uname_version() return kernelVersion   end
 function kernel.uname_name()    return kernelName      end
+function kernel.shutdown(opt)
+  uninit()
+  if opt == "reboot" then
+    log("Restarting")
+    sleep(0.3)
+    reboot()
+  else
+    log("Shutdown")
+    sleep(0.3)
+    shutdown()
+  end
+end
 
 local function findInit()
   local inits = {"/sbin/init.lua","/bin/init.lua","/etc/init.lua"}
@@ -126,16 +154,21 @@ if not init then
 end
 
 log("Found init script at " .. init)
+
 function kernel.run(file, ...)
   local ok, err = loadfile(file)
 
   if not ok then
-    error("Error while running " .. file, 0)
+    print("Error while running " .. file .. ": " .. err, 0)
     return false
   end
 
   setfenv(ok, _G)
   ok(...)
+end
+
+function error(reason)
+  kernel_panic(reason, reboot)
 end
 
 local ok, err = loadfile(init)
