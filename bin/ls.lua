@@ -12,7 +12,7 @@ local dirColor = colors.lightBlue
 local fileColor = colors.white
 local scriptColor = colors.lime
 
-local flags, args = shell.sortOutArgs(args)
+local flags, args = shell.parseArgs(args)
 
 local lsPath
 
@@ -107,12 +107,9 @@ for i=1, #files, 1 do
     if fs.isDir(lsPath .. "/" .. files[i]) then
       setTextColor(dirColor)
     end
+    
     print(files[i])
   end
-end
-
-if not showSize then
-  print("")
 end
 
 setTextColor(oldColor)

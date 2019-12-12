@@ -1,7 +1,7 @@
 -- Which --
 
 local args = {...}
-local flags, args = shell.sortOutArgs(args)
+local flags, args = shell.parseArgs(args)
 
 if #args < 1 then
   print("Usage: which COMMAND")

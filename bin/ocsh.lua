@@ -1,5 +1,12 @@
 -- A shell. Finally, a shell! --
 
+local args = {...}
+
+if #args >= 1 then
+  shell.runScript(args[1])
+  return
+end
+
 local errors = require("liberrors")
 
 error = errors.error
@@ -174,7 +181,7 @@ function shell.parse(line)
   return words
 end
 
-function shell.sortOutArgs(tArgs) -- Sort out flags from arguments
+function shell.parseArgs(tArgs) -- Sort flags and arguments
   local rF, rA = {}, {}
   if #tArgs > 0 then
     for i=1, #tArgs, 1 do
@@ -228,6 +235,19 @@ function shell.resolveProgram(prg)
   end
 end
 
+function shell.resolvePath(path)
+  local concat = ""
+  if path:sub(1,1) ~= "/" then
+    if shell.pwd() ~= "/" then
+      concat = "/"
+    end
+
+    return shell.pwd() .. concat .. path
+  else
+    return path
+  end
+end
+
 local function join(tbl, joinChar)
   local rtn = ""
   for i=1, #tbl, 1 do
@@ -236,7 +256,7 @@ local function join(tbl, joinChar)
   return rtn
 end
 
-local function run(...)
+function shell.run(...)
   local a = tokenize(...)
   
   local prg = shell.resolveProgram(a[1])
@@ -260,6 +280,28 @@ local function run(...)
   end
 end
 
+function shell.runScript(path)
+  local h = fs.open(shell.resolvePath(path), "r")
+  if not h then errors.fileNotFoundError(); return end
+  local data = {}
+  while true do
+    local ln = h.readLine()
+    if ln then
+      table.insert(data, ln)
+    else
+      break
+    end
+  end
+  h.close()
+
+  data[#data] = nil
+
+  for i=1, #data, 1 do
+    shell.run(data[i])
+  end
+  return
+end
+
 while not exit do
   local prompt = join(shell.parse("$USER @ $HOSTNAME : $PWD"), "")
   if users.user() == "root" then
@@ -270,5 +312,5 @@ while not exit do
 
   write(prompt)
   local cmd = read()
-  run(cmd)
+  shell.run(cmd)
 end

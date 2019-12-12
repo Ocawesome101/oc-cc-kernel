@@ -2,6 +2,7 @@
 
 local args = {...}
 local errors = require("liberrors")
+local flags, args = shell.parseArgs(args)
 
 if #args < 2 then
   print("Usage: mv FILE DEST")

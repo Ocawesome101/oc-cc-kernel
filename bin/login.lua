@@ -1,5 +1,10 @@
 -- Login screen --
 
+if shell then
+  print("Cannot run login from inside a shell")
+  return
+end
+
 local loginPrompt = sys.hostname() .. " login: "
 local passwordPrompt = "password: "
 

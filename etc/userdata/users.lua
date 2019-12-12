@@ -1,3 +1,4 @@
 return {
-  "user"
+  "user",
+  "ocawesome101",
 }

@@ -3,7 +3,7 @@
 local args = {...}
 local errors = require("liberrors")
 
-local flags, args = shell.sortOutArgs(args)
+local flags, args = shell.parseArgs(args)
 
 for i=1, #flags, 1 do
   if #flags[i] >= 2 then

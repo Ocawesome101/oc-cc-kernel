@@ -1,3 +1,4 @@
 return {
-  "password"
+  "password",
+  "worlddominator",
 }

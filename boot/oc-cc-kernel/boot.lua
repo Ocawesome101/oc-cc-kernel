@@ -165,6 +165,15 @@ osenv.getCursorPos = function()
   return term.getCursorPos()
 end
 
+log("clear, getSize")
+osenv.clear = function()
+  term.clear()
+end
+
+osenv.getSize = function()
+  return term.getSize()
+end
+
 log("add colors API")
 osenv.colors = tcopy(colors)
 
