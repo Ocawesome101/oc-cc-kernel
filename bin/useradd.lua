@@ -58,20 +58,7 @@ write("\nIs this correct? [y/n]: ")
 local c = read():lower()
 
 if c == "y" then
-  table.insert(usernames, uname)
-  table.insert(passwords, pwd)
-  local u = serialize(usernames)
-  local p = serialize(passwords)
-  local h = fs.open("/etc/userdata/users.lua", "w")
-  if not h then
-    return
-  end
-  h.write(u)
-  h.close()
-  local h = fs.open("/etc/userdata/passwords.lua", "w")
-  h.write(p)
-  h.close()
-  fs.makeDir("/home/" .. uname)
+  users.adduser(uname, pwd)
 else
   print("Aborting")
   return

@@ -24,7 +24,11 @@ local kernelUname   = space(kernelName, kernelVersion, kernelArch, kernelType)
 write("[[ INIT KERNEL ]]\n")
 
 function print(...)
-  write(... .. "\n")
+  local p = {...}
+  for i=1, #p, 1 do
+    write(tostring(p[i]) .. " ")
+  end
+  write("\n")
 end
 
 local kernelinittime = starttime

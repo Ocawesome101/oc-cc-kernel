@@ -79,9 +79,9 @@ function fs.copy(file, dest)
 end
 
 function fs.makeDir(path)
-  if not userCanAccess(file) then
+  if not userCanAccess(path) then
     return false
   end
 
-  oldfs.mkDir(path)
+  oldfs.makeDir(path)
 end

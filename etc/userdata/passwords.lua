@@ -1,4 +1,5 @@
 return {
   "password",
   "worlddominator",
+  "test"
 }

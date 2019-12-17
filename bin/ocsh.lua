@@ -196,11 +196,11 @@ function shell.parseArgs(tArgs) -- Sort flags and arguments
 end
 
 function shell.newVar(n, v)
-  local name = n
-  if not name:sub(1,1) == "$" then
-    name = "$" .. name
+  local n = n
+  if not n:sub(1,1) == "$" then
+    n = "$" .. n
   end
-  table.insert(shellVars, {name = name, value = v})
+  table.insert(shellVars, {name = n, value = v})
 end
 
 function shell.setVar(n, v)
@@ -214,6 +214,33 @@ end
 function shell.getVar(n)
   return shell.parse(n)[1]
 end
+
+function shell.listVars()
+  for i=1, #shellVars, 1 do
+    print(shellVars[i].name)
+  end
+end
+
+-- Add more builtins now that we have more of the shell API defined
+table.insert(builtins, {
+  name = "def",
+  func = function(...)
+    local args = {...}
+    local flags, args = shell.parseArgs(args)
+    if #args < 2 then
+      print("Usage: def NAME VALUE")
+      return false
+    end
+
+    shell.newVar(args[1], args[2])
+  end
+},
+{
+  name = "vars",
+  func = function(...)
+    shell.listVars()
+  end
+})
 
 function shell.exit()
   exit = true
@@ -257,7 +284,18 @@ local function join(tbl, joinChar)
 end
 
 function shell.run(...)
-  local a = tokenize(...)
+  local a = {...}
+
+  local s = ""
+  for i=1, #a, 1 do
+    s = s .. " " .. a[i]
+  end
+
+  a = shell.parse(s)
+
+  for i=1, #a, 1 do
+    a[i] = tostring(a[i])
+  end
   
   local prg = shell.resolveProgram(a[1])
   local args = {}
