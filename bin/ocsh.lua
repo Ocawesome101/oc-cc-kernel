@@ -234,8 +234,8 @@ table.insert(builtins, {
 
     shell.newVar(args[1], args[2])
   end
-},
-{
+})
+table.insert(builtins, {
   name = "vars",
   func = function(...)
     shell.listVars()
