@@ -153,27 +153,27 @@ local function tokenize( ... ) -- Straight out of the craftOS shell :P
     return tWords
 end
 
-function shell.parse(line)
+function shell.parse(line) -- One absolutely hideous function, coming right up!
   local words = tokenize(line)
   for i=1, #words, 1 do -- 1st pass-- special characters
     for j=1, #shellSpecial, 1 do
-      if words[i] == shellSpecial[j].name then
-        words[i] = shellSpecial[j].value
+      if words[i]:sub(1,#shellSpecial[j].name) == shellSpecial[j].name then
+        words[i] = shellSpecial[j].value .. words[i]:sub(#shellSpecial[j].name+1)
       end
     end
     -- 2nd pass-- variables
     for j=1, #shellVars, 1 do
-      if words[i] == shellVars[j].name then
+      if words[i]:sub(1,#shellVars[j].name) == shellVars[j].name then
         if type(shellVars[j].value) == "function" then -- Variables can be static or dynamic
-          words[i] = shellVars[j].value()
+          words[i] = shellVars[j].value() .. words[i]:sub(#shellVars[j].name+1)
         else
-          words[i] = shellVars[j].value
+          words[i] = shellVars[j].value .. words[i]:sub(#shellVars[j].name+1)
         end
       end
     end
     for j=1, #shellSpecial, 1 do -- 3rd pass-- special characters again
-      if words[i] == shellSpecial[j].name then
-        words[i] = shellSpecial[j].value
+      if words[i]:sub(1,#shellSpecial[j].name) == shellSpecial[j].name then
+        words[i] = shellSpecial[j].value .. words[i]:sub(#shellSpecial[j].name+1)
       end
     end
   end
