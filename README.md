@@ -2,7 +2,9 @@
 \*nix-inspired OS for ComputerCraft. Better sandboxing than OC-OS 2. (Meaning, the global table `_G` is actually sandboxed.)
 
 ## CC-BIOS
-As of kernel version 0.7, OC-CC-Kernel can be booted using CC-BIOS. Everything should work.
+As of kernel version 0.7, OC-CC-Kernel can be booted using [CC-BIOS](https://github.com/ocawesome101/cc-bios). Everything should work.
+
+NOTE: Sandboxing of `_G` is disabled when booting with CC-BIOS. This is because the entire reason for my sandboxing is to provide an environment nearly identical to that which CC-BIOS provides.
 
 ## Standard BIOS
 Requires [OC-EFI](https://github.com/ocawesome101/ocbios/blob/master/uefi.lua) as `startup` in order to boot. Boot files, as well as the kernel, are found in `/boot`.
