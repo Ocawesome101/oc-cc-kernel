@@ -311,7 +311,10 @@ function shell.run(...)
       end
 
       setfenv(p, _G)
-      p(table.unpack(args))
+      local ok, err = pcall(function()p(table.unpack(args))end)
+      if not ok then
+        errors.error(err)
+      end
     else
       errors.programNotFoundError(a[1])
     end
