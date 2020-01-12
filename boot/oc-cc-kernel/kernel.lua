@@ -2,11 +2,14 @@
 
 local flags = {...}
 
-local hwid
+local hwid = flags[2]
 local starttime = flags[3]
+local ccBIOS = flags[4]
 flags = flags[1]
 
-sleep = os.sleep
+os.ccbios = function()
+  return ccBIOS
+end
 
 local function space(...)
   local a = {...}
@@ -15,7 +18,7 @@ local function space(...)
   return r
 end
 
-local kernelVersion = "0.1.0"
+local kernelVersion = "0.7.2"
 local kernelArch    = "ccLua51"
 local kernelType    = "cc-Unix"
 local kernelName    = "oc-cc-kernel"
@@ -23,12 +26,18 @@ local kernelUname   = space(kernelName, kernelVersion, kernelArch, kernelType)
 
 write("[[ INIT KERNEL ]]\n")
 
-function print(...)
-  local p = {...}
-  for i=1, #p, 1 do
-    write(tostring(p[i]) .. " ")
+if ccBIOS then
+  os.loadAPI("/rom/apis/colors.lua")
+else
+  function print(...)
+    local p = {...}
+    for i=1, #p, 1 do
+      write(tostring(p[i]) .. " ")
+    end
+    write("\n")
   end
-  write("\n")
+
+  sleep = os.sleep
 end
 
 local kernelinittime = starttime
