@@ -80,10 +80,9 @@ if os.version():sub(1,7) == "CC-BIOS" then
   ccBIOS = true
 end
 
+local osenv = {}
 if not ccBIOS then
-  log("No")
   log("init osenv")
-  local osenv = {}
   
   log("add os API")
   osenv.os = tcopy(os)
