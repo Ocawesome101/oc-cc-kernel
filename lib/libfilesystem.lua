@@ -5,6 +5,23 @@ local devfs = require("libdevfs")
 
 local oldfs = tcopy(fs)
 
+if os.ccbios() then
+  -- Copied straight from the BIOS
+  function loadfile( filename, mode, env )
+    -- Support the previous `loadfile(filename, env)` form instead.
+    if type(mode) == "table" and env == nil then
+      mode, env = nil, mode
+    end
+
+    local file = oldfs.open( filename, "r" )
+    if not file then return nil, "File not found" end
+
+    local func, err = load( file.readAll(), "@" .. fs.getName( filename ), mode, env )
+    file.close()
+    return func, err
+  end
+end
+
 local protected = {"/etc", "/lib", "/bin", "/boot", "/root"}
 
 function fs.protected()
