@@ -42,6 +42,7 @@ local function tcopy(tbl)
     rtn[k] = v
   end
 
+
   return rtn
 end
 
@@ -96,6 +97,11 @@ if not ccBIOS then
   
   log("add fs API")
   osenv.fs = tcopy(fs)
+  
+  if ccemux then
+    log("add CCEmuX interface")
+    osenv.ccemux = ccemux
+  end
   
   log("add load, loadstring, loadfile")
   osenv.load = load
