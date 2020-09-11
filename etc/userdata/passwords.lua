@@ -1,5 +1,1 @@
-return {
-  "password",
-  "worlddominator",
-  "test"
-}
+return {}
